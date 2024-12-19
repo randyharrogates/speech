@@ -38,3 +38,6 @@ docker-compose.override.yml  # Optional Docker Compose override files
 # FastAPI migrations or database
 alembic.ini              # Alembic migrations
 migrations/              # SQLAlchemy migrations
+
+# Specifics
+.DS_Store

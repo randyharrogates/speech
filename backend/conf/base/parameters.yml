@@ -1,0 +1,15 @@
+setup_inputs:
+  start_time: "5pm"
+  end_time: "11pm"
+  country: "Singapore"
+  indoor_outdoor: "outdoors"
+  budget: "100"
+  food_preference: "Italian"
+  activity_preference: "Picnic"
+  other_requirements: "Plan a casual date for 2 for a first date"
+
+
+is_run: True
+
+
+

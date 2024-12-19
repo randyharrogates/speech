@@ -1,0 +1,10 @@
+# Here you can define all your datasets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+
+final_result:
+  type: kedro_datasets.json.JSONDataset
+  filepath: /Users/randy/git/dating_app/dating-plan-ai-agents/data/02_intermediate/final_result.json
+  
