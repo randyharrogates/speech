@@ -1,4 +1,5 @@
-# backend/main.py
+import sys
+from pydub import AudioSegment
 from fastapi import FastAPI, File, UploadFile
 import os
 from datetime import datetime
@@ -6,11 +7,26 @@ import whisper
 import sqlite3
 from typing import List
 import aiofiles
-from fastapi_helper import load_config, init_db
-from models.transcription import Transcription
+from backend.app.fastapi.fastapi_helper import load_config, init_db
+from backend.app.models.transcription import Transcription
+
+
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-config = load_config()
+
+# Allow requests from frontend
+origins = [
+    "http://localhost:3000",  # React's default port
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow your frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+config = load_config(file_path="backend/app/utils/config.yaml")
 DB_NAME = config["database"]["name"]
 UPLOAD_FOLDER = config["upload"]["folder"]
 MODEL_NAME = config["model"]["name"]
@@ -35,8 +51,16 @@ async def transcribe(file: UploadFile = File(...)):
         content = await file.read()  # Read the file content
         await out_file.write(content)
 
+    # Convert audio to WAV format using pydub
+    wav_path = f"{UPLOAD_FOLDER}/{os.path.splitext(file.filename)[0]}.wav"
+    try:
+        audio = AudioSegment.from_file(save_path)
+        audio.export(wav_path, format="wav")
+    except Exception as e:
+        return {"error": f"Audio conversion failed: {str(e)}"}
+
     # Perform transcription using Whisper
-    result = model.transcribe(save_path)
+    result = model.transcribe(wav_path)
     transcription = result["text"]
 
     # Save transcription to database

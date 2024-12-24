@@ -43,3 +43,6 @@ migrations/
 .DS_Store
 
 backendvenv
+
+*.db
+data/
