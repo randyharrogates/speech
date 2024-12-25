@@ -1,5 +1,4 @@
 /** @format */
-
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -23,10 +22,11 @@ function Upload() {
 			const response = await axios.post("http://localhost:8000/transcribe-multiple", formData, {
 				headers: { "Content-Type": "multipart/form-data" },
 			});
-			alert("Files uploaded and transcribed!");
+			alert("Files uploaded and transcribed!"); // If you want to display an alert
 			console.log(response.data); // Display response data
 		} catch (err) {
 			console.error("Error during file upload", err);
+			alert("Error during file upload"); // Handle the error alert
 		}
 	};
 
@@ -42,11 +42,13 @@ function Upload() {
 			<p>* Select one or more files</p>
 			<div className="card p-4">
 				<div className="mb-3">
+					{/* Added the data-testid attribute for testing purposes */}
 					<input
 						type="file"
 						className="form-control"
 						multiple // Allow multiple file selection
 						onChange={handleFileSelection}
+						data-testid="file-input" // Ensure it's referenced in tests
 					/>
 				</div>
 				<button className="btn btn-primary" onClick={handleFileUpload}>

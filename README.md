@@ -19,8 +19,21 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 pip install -r requirements.txt
 ```
 
+### 2. Run test script
 Ensure you are in the root project folder "speech" and run the following command
 
 ```bash
 pytest backend/tests/backend_test.py
+```
+
+
+## Running test for frontend
+### 1. Install dependencies
+
+### 2. Run test script
+
+Ensure you are in the frontend folder "speech/frontend" and run the following command
+
+```bash
+npm test -- --watchAll --verbose
 ```
