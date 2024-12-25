@@ -1,12 +1,7 @@
 # backend/main.py
-from fastapi import FastAPI, File, UploadFile
-from pydantic import BaseModel
-from datetime import datetime
-import whisper
+
 import sqlite3
 from typing import List
-import os
-import aiofiles
 import yaml
 
 
