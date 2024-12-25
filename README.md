@@ -2,16 +2,43 @@
 
 This project consists of a full-stack application with a ReactJS frontend, a FastAPI backend, and SQLite as the database. It also uses OpenAI Whisper for transcription.
 
+## Requirements:
+
+- Python: 3.9 - 3.12
+- pip: latest version
+
 ## Starting the Backend
 
 The backend is built using **FastAPI**. Follow these steps to start the backend:
 
-### 1. Install Dependencies
+### 1. Create a virtual environment**:
+   
+```bash
+cd backend
+python3 -m venv venv
+```
+
+### 2. Activate venv
+
+On MacOS/Linux:
+
+```bash
+source venv/bin/activate
+```
+
+On windows:
+
+```bash
+venv\Scripts\activate
+```
+
+### 3. Install Dependencies
 
 Make sure you in the root folder and run the following command:
 
 ```bash
-cd backend
+pip install --upgrade pip
+pip install --upgrade setuptools
 pip install -r requirements.txt
 ```
 
