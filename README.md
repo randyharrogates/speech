@@ -106,7 +106,14 @@ pytest backend/tests/backend_test.py
 
 
 ## Running test for frontend
-### 1. Install dependencies
+
+### 1. Install dependencies (If not already done so)
+
+Ensure you are in the frontend folder "speech/frontend" and run the following command
+
+```bash
+npm install
+```
 
 ### 2. Run test script
 
