@@ -4,13 +4,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function Navbar() {
 	return (
 		<nav className="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div className="container">
 				<Link className="navbar-brand" to="/">
-					Audio Transcription
+					<i className="bi bi-music-note-list"></i> Audio Transcription
 				</Link>
 				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 					<span className="navbar-toggler-icon"></span>
@@ -19,17 +20,17 @@ function Navbar() {
 					<ul className="navbar-nav ms-auto">
 						<li className="nav-item">
 							<Link className="nav-link" to="/upload">
-								Upload and Transcribe
+								<i className="bi bi-upload"></i> Upload and Transcribe
 							</Link>
 						</li>
 						<li className="nav-item">
 							<Link className="nav-link" to="/search">
-								Search Transcriptions
+								<i className="bi bi-search"></i> Search Transcriptions
 							</Link>
 						</li>
 						<li className="nav-item">
 							<Link className="nav-link" to="/transcriptions">
-								All Transcriptions
+								<i className="bi bi-card-list"></i> All Transcriptions
 							</Link>
 						</li>
 					</ul>
