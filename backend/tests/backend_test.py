@@ -57,7 +57,7 @@ def test_transcribe_multiple(mock_transcribe_func):
 
     # Send the files to the API
     response = client.post(
-        "/transcribe-multiple",
+        "/transcribe",
         files=[
             ("files", (file_1.name, file_1, "audio/mp3")),
             ("files", (file_2.name, file_2, "audio/mp3")),
