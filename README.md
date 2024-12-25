@@ -4,7 +4,7 @@ This project consists of a full-stack application with a ReactJS frontend, a Fas
 
 ## Requirements:
 
-- Python: 3.9 - 3.12
+- Python: 3.9 - 3.12 (Please use python version 3.12 for best compatibility)
 - pip: latest version
 
 ## Starting the Backend
