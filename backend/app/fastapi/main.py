@@ -41,7 +41,7 @@ def health():
     return {"status": "ok"}
 
 
-@app.post("/transcribe-multiple")
+@app.post("/transcribe")
 async def transcribe_multiple(files: list[UploadFile] = File(...)):
     transcriptions = []
 
