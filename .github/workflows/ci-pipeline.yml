@@ -16,7 +16,7 @@ jobs:
 
       # Step 2: Cache Python dependencies
       - name: Cache Python dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-python-${{ hashFiles('backend/requirements.txt') }}
@@ -25,7 +25,7 @@ jobs:
 
       # Step 3: Cache Node.js dependencies
       - name: Cache Node.js dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
