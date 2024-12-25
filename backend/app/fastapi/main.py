@@ -11,7 +11,6 @@ from backend.app.fastapi.fastapi_helper import load_config, init_db
 from backend.app.models.transcription import Transcription
 from fastapi.middleware.cors import CORSMiddleware
 
-# Load logging configuration from logging.yaml
 with open("backend/app/utils/logging.yaml", "r") as file:
     config = yaml.safe_load(file)
     logging.config.dictConfig(config)
