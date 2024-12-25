@@ -2,12 +2,16 @@
 
 This project consists of a full-stack application with a ReactJS frontend, a FastAPI backend, and SQLite as the database. It also uses OpenAI Whisper for transcription. Read architecture.pdf for a description of the design of the project.
 
+* Note
+Frontend for master branch is in a multi-page UI for better views. If needed, for single page UI, please use branch "v2_single_page"
+
 ## Requirements:
 
 - Python: 3.9 - 3.12 (Please use python version 3.12 for best compatibility
 - pip: latest version
 
 ### Installing FFmpeg for Local Development
+
 - If you're running the application locally (not using Docker), you will need to install FFmpeg manually if your system does not have it installed, for the transcription functionality to work. Run the following command on terminal
 
 - For macOS:
@@ -103,7 +107,6 @@ cd ..
 pytest backend/tests/backend_test.py
 ```
 
-
 ## Running test for frontend
 
 ### 1. Install dependencies (If not already done so)
@@ -122,9 +125,10 @@ Ensure you are in the frontend folder "speech/frontend" and run the following co
 npm test -- --watchAll --verbose
 ```
 
-## How to build an run docker container for the application
+## How to build and run docker container for the application
 
 Ensure you are in the root directory and run the following command:
+
 ```bash
 docker-compose up --build
 ```
