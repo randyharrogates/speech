@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -12,6 +12,11 @@ function App() {
 	const [allTranscriptions, setAllTranscriptions] = useState([]); // All fetched transcriptions
 	const [searchTranscriptions, setSearchTranscriptions] = useState([]); // Search results for transcriptions
 	const [uploadFiles, setUploadFiles] = useState([]); // Files selected for upload
+	const [loading, setLoading] = useState(false); // Loading state for progress bar
+	const [uploadProgress, setUploadProgress] = useState(0); // Progress state for upload
+
+	// Reference to the file input field
+	const fileInputRef = useRef();
 
 	// Handle file selection for upload
 	const handleFileSelection = (e) => {
@@ -37,18 +42,31 @@ function App() {
 			formData.append("files", uploadFiles[i]);
 		}
 
+		setLoading(true); // Show the loading bar
+		setUploadProgress(0); // Reset progress
+
 		try {
+			// Start the file upload with progress tracking
 			const response = await axios.post("http://localhost:8000/transcribe", formData, {
 				headers: { "Content-Type": "multipart/form-data" },
+				onUploadProgress: (progressEvent) => {
+					if (progressEvent.total) {
+						const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+						setUploadProgress(progress); // Update the progress bar
+					}
+				},
 			});
 			alert("Files uploaded and transcribed!");
 			console.log(response.data);
 
 			// Clear the selected files after successful upload
 			setUploadFiles([]); // Clear the upload files state
+			fileInputRef.current.value = ""; // Clear the file input field
 		} catch (err) {
 			console.error("Error during file upload", err);
 			alert("Error during file upload");
+		} finally {
+			setLoading(false); // Hide the loading bar after upload completes
 		}
 	};
 
@@ -98,23 +116,40 @@ function App() {
 	};
 
 	return (
-		<div className="container mt-5">
+		<div className="container mt-4">
 			<h1 className="text-center mb-5">Audio Transcription System</h1>
 
 			{/* Upload Section */}
-			<div className="card p-4 mb-4">
-				<h2>Upload and Transcribe</h2>
+			<div className="card p-3 mb-4 shadow-sm">
+				<h2 className="h5">Upload and Transcribe</h2>
 				<div className="mb-3">
-					<input type="file" className="form-control" multiple onChange={handleFileSelection} />
+					<input
+						type="file"
+						className="form-control form-control-sm"
+						multiple
+						onChange={handleFileSelection}
+						ref={fileInputRef} // Reference the file input field
+					/>
 				</div>
-				<button className="btn btn-primary" onClick={handleFileUpload}>
-					Upload and Transcribe
+				<button
+					className="btn btn-primary btn-sm"
+					onClick={handleFileUpload}
+					disabled={loading} // Disable button during upload
+				>
+					<i className="bi bi-cloud-upload"></i> Upload and Transcribe
 				</button>
+
+				{/* Display Loading Bar */}
+				{loading && (
+					<div className="mt-2">
+						<progress value={uploadProgress} max="100" className="w-100" />
+					</div>
+				)}
 
 				{uploadFiles.length > 0 && (
 					<div className="mt-4">
-						<h5>Selected Files:</h5>
-						<ul className="list-group">
+						<h5 className="h6">Selected Files:</h5>
+						<ul className="list-group list-group-flush">
 							{uploadFiles.map((file, index) => (
 								<li key={index} className="list-group-item d-flex justify-content-between align-items-center">
 									{file.name}
@@ -129,18 +164,18 @@ function App() {
 			</div>
 
 			{/* Search Section */}
-			<div className="card p-4 mb-4">
-				<h2>Search Transcriptions</h2>
+			<div className="card p-3 mb-4 shadow-sm">
+				<h2 className="h5">Search Transcriptions</h2>
 				<div className="input-group mb-3">
-					<input type="text" className="form-control" placeholder="Enter filename to search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-					<button className="btn btn-secondary" onClick={handleSearch}>
-						Search
+					<input type="text" className="form-control form-control-sm" placeholder="Enter filename to search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+					<button className="btn btn-secondary btn-sm" onClick={handleSearch}>
+						<i className="bi bi-search"></i> Search
 					</button>
 				</div>
 
 				{/* Clear All Search Results Button */}
-				<button className="btn btn-danger mb-3" onClick={clearAllSearchResults}>
-					Clear All Search Results
+				<button className="btn btn-danger btn-sm mb-3" onClick={clearAllSearchResults}>
+					<i className="bi bi-x-circle"></i> Clear All Search Results
 				</button>
 
 				<ul className="list-group">
@@ -157,21 +192,21 @@ function App() {
 			</div>
 
 			{/* Transcriptions Section */}
-			<div className="card p-4">
-				<h2>All Transcriptions</h2>
-				<button className="btn btn-success mb-3" onClick={fetchTranscriptions}>
-					Fetch All Transcriptions
+			<div className="card p-3 shadow-sm">
+				<h2 className="h5">All Transcriptions</h2>
+				<button className="btn btn-success btn-sm mb-3" onClick={fetchTranscriptions}>
+					<i className="bi bi-arrow-clockwise"></i> Fetch All Transcriptions
 				</button>
 
 				{/* Clear All Transcriptions Button */}
-				<button className="btn btn-danger mb-3" onClick={clearAllTranscriptions}>
-					Clear All Transcriptions
+				<button className="btn btn-danger btn-sm mb-3" onClick={clearAllTranscriptions}>
+					<i className="bi bi-trash"></i> Clear All Transcriptions
 				</button>
 
 				{allTranscriptions.length === 0 ? (
 					<p className="text-center">No transcriptions available</p>
 				) : (
-					<table className="table table-striped table-bordered">
+					<table className="table table-striped table-bordered table-sm">
 						<thead className="thead-dark">
 							<tr>
 								<th>#</th>
