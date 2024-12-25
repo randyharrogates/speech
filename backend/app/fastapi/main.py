@@ -1,5 +1,4 @@
-import sys
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
 import os
 from datetime import datetime
 import whisper
@@ -38,11 +37,31 @@ init_db(DB_NAME)
 # Health endpoint
 @app.get("/health")
 def health():
+    """
+    Simple health endpoint that always returns a 200 response with a JSON object of {'status': 'ok'}.
+    """
     return {"status": "ok"}
 
 
 @app.post("/transcribe")
 async def transcribe_multiple(files: list[UploadFile] = File(...)):
+    """
+    Transcribes multiple audio files uploaded by the user.
+
+    This endpoint accepts a list of audio files, saves each file to the
+    server, performs transcription using the Whisper model, and stores the
+    results in a SQLite database. The transcriptions are returned as a JSON
+    response containing the filename and transcription text.
+
+    Args:
+        files (list[UploadFile]): List of audio files to be transcribed.
+
+    Returns:
+        dict: A JSON object containing a list of transcriptions, each with
+        a filename and its corresponding transcription. In case of an error
+        during transcription, an error message is returned.
+    """
+
     transcriptions = []
 
     for file in files:
@@ -83,31 +102,76 @@ async def transcribe_multiple(files: list[UploadFile] = File(...)):
 
 @app.get("/transcriptions", response_model=List[Transcription])
 def get_transcriptions():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("SELECT filename, transcription, created_at FROM transcriptions")
-    rows = c.fetchall()
-    conn.close()
+    """
+    Retrieves all transcriptions from the database.
 
-    return [
-        {"filename": row[0], "transcription": row[1], "created_at": row[2]}
-        for row in rows
-    ]
+    Returns:
+        List[Transcription]: A list of transcriptions, each containing the filename,
+        transcription text, and the time the transcription was created.
+
+    Raises:
+        HTTPException: If there is an error while fetching data from the database.
+    """
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
+        c.execute("SELECT filename, transcription, created_at FROM transcriptions")
+        rows = c.fetchall()
+        conn.close()
+
+        # If no transcriptions are found
+        if not rows:
+            raise HTTPException(status_code=404, detail="No transcriptions found.")
+
+        return [
+            {"filename": row[0], "transcription": row[1], "created_at": row[2]}
+            for row in rows
+        ]
+    except sqlite3.Error as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 
 @app.get("/search")
 def search_transcriptions(filename: str, db_name: str = DB_NAME):
-    conn = sqlite3.connect(db_name)
-    c = conn.cursor()
-    c.execute(
-        "SELECT filename, transcription, created_at FROM transcriptions WHERE filename LIKE ?",
-        ("%" + filename + "%",),
-    )
+    """
+    Searches for transcriptions by filename.
 
-    rows = c.fetchall()
-    conn.close()
+    Args:
+        filename (str): The search query to look for in the filename.
+        db_name (str, optional): The name of the database to search in. Defaults to DB_NAME.
 
-    return [
-        {"filename": row[0], "transcription": row[1], "created_at": row[2]}
-        for row in rows
-    ]
+    Returns:
+        List[Transcription]: A list of transcriptions, each containing the filename,
+        transcription text, and the time the transcription was created.
+
+    Raises:
+        HTTPException: If there is an error while performing the search or connecting to the database.
+    """
+    try:
+        conn = sqlite3.connect(db_name)
+        c = conn.cursor()
+        c.execute(
+            "SELECT filename, transcription, created_at FROM transcriptions WHERE filename LIKE ?",
+            ("%" + filename + "%",),
+        )
+
+        rows = c.fetchall()
+        conn.close()
+
+        # If no results are found for the search
+        if not rows:
+            raise HTTPException(
+                status_code=404,
+                detail="No transcriptions found matching the search criteria.",
+            )
+
+        return [
+            {"filename": row[0], "transcription": row[1], "created_at": row[2]}
+            for row in rows
+        ]
+    except sqlite3.Error as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
