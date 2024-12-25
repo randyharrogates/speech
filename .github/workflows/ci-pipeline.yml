@@ -40,6 +40,7 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip setuptools
           pip install -r requirements.txt
+          cd ..
           pytest backend/tests/backend_test.py
 
       # Step 5: Run frontend tests using npm
