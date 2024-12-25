@@ -1,5 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 import os
+import yaml
+import logging.config
 from datetime import datetime
 import whisper
 import sqlite3
@@ -8,6 +10,11 @@ import aiofiles
 from backend.app.fastapi.fastapi_helper import load_config, init_db
 from backend.app.models.transcription import Transcription
 from fastapi.middleware.cors import CORSMiddleware
+
+# Load logging configuration from logging.yaml
+with open("backend/app/utils/logging.yaml", "r") as file:
+    config = yaml.safe_load(file)
+    logging.config.dictConfig(config)
 
 app = FastAPI()
 origins = [
@@ -40,6 +47,7 @@ def health():
     """
     Simple health endpoint that always returns a 200 response with a JSON object of {'status': 'ok'}.
     """
+    logging.info("Health endpoint accessed")
     return {"status": "ok"}
 
 
@@ -65,32 +73,42 @@ async def transcribe_multiple(files: list[UploadFile] = File(...)):
     transcriptions = []
 
     for file in files:
+        logging.info(f"Transcribing file: {file.filename}")
+
         # Save uploaded file
         save_path = f"{UPLOAD_FOLDER}/{file.filename}"
         async with aiofiles.open(save_path, "wb") as out_file:
             content = await file.read()
             await out_file.write(content)
+        logging.info(f"File saved to {save_path}")
 
-        # Perform transcription using Whisper (directly pass the file without conversion)
         try:
-            result = model.transcribe(
-                save_path
-            )  # Assuming Whisper supports the file format
+            # Perform transcription using Whisper model
+            result = model.transcribe(save_path)
             transcription = result["text"]
+
+            # Log the transcription result
+            logging.info(f"Transcription for {file.filename}: {transcription}")
         except Exception as e:
+            logging.error(f"Audio transcription failed for {file.filename}: {str(e)}")
             return {
                 "error": f"Audio transcription failed for {file.filename}: {str(e)}"
             }
 
-        # Save transcription to database
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
-        c.execute(
-            "INSERT INTO transcriptions (filename, transcription, created_at) VALUES (?, ?, ?)",
-            (file.filename, transcription, datetime.now().isoformat()),
-        )
-        conn.commit()
-        conn.close()
+        # Save transcription to the database
+        try:
+            conn = sqlite3.connect(DB_NAME)
+            c = conn.cursor()
+            c.execute(
+                "INSERT INTO transcriptions (filename, transcription, created_at) VALUES (?, ?, ?)",
+                (file.filename, transcription, datetime.now().isoformat()),
+            )
+            conn.commit()
+            conn.close()
+            logging.info(f"Transcription for {file.filename} saved to the database")
+        except sqlite3.Error as e:
+            logging.error(f"Database error: {str(e)}")
+            return {"error": f"Database error: {str(e)}"}
 
         # Append result to the list of transcriptions
         transcriptions.append(
@@ -121,15 +139,19 @@ def get_transcriptions():
 
         # If no transcriptions are found
         if not rows:
+            logging.info("No transcriptions found in the database.")
             raise HTTPException(status_code=404, detail="No transcriptions found.")
 
+        logging.info(f"Retrieved {len(rows)} transcriptions.")
         return [
             {"filename": row[0], "transcription": row[1], "created_at": row[2]}
             for row in rows
         ]
     except sqlite3.Error as e:
+        logging.error(f"Database error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
     except Exception as e:
+        logging.error(f"Unexpected error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 
@@ -162,16 +184,20 @@ def search_transcriptions(filename: str, db_name: str = DB_NAME):
 
         # If no results are found for the search
         if not rows:
+            logging.info(f"No transcriptions found for filename: {filename}")
             raise HTTPException(
                 status_code=404,
                 detail="No transcriptions found matching the search criteria.",
             )
 
+        logging.info(f"Found {len(rows)} transcriptions matching {filename}.")
         return [
             {"filename": row[0], "transcription": row[1], "created_at": row[2]}
             for row in rows
         ]
     except sqlite3.Error as e:
+        logging.error(f"Database error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
     except Exception as e:
+        logging.error(f"Unexpected error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
