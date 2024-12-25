@@ -49,9 +49,3 @@ jobs:
           cd frontend
           npm install
           npm test -- --watchAll --verbose
-
-      # Step 7: Build Docker images (without pushing them)
-      - name: Build Docker images
-        run: |
-          docker build -t my-backend-image:latest backend/
-          docker build -t my-frontend-image:latest frontend/
