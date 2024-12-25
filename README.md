@@ -7,6 +7,22 @@ This project consists of a full-stack application with a ReactJS frontend, a Fas
 - Python: 3.9 - 3.12 (Please use python version 3.12 for best compatibility)
 - pip: latest version
 
+### Installing FFmpeg for Local Development
+- If you're running the application locally (not using Docker), you will need to install FFmpeg manually if your system does not have it installed, for the transcription functionality to work. Run the following command on terminal
+
+- For macOS:
+
+```bash
+brew install ffmpeg
+```
+
+- For Linux:
+
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
 ## Starting the Backend
 
 The backend is built using **FastAPI**. Follow these steps to start the backend:

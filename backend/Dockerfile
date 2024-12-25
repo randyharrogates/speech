@@ -4,10 +4,14 @@ FROM python:3.12-slim
 # Set working directory in the container
 WORKDIR /app
 
+# Install FFmpeg for audio processing
+RUN apt-get update && \
+    apt-get install -y ffmpeg
+
 # Copy the requirements file into the container
 COPY backend/requirements.txt /app/
 
-# Install dependencies
+# Install Python dependencies
 RUN pip install --upgrade pip && \
     pip install --upgrade setuptools && \
     pip install -r requirements.txt
