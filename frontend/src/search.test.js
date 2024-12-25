@@ -2,7 +2,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
-import Search from "./Search";
+import Search from "./search";
 
 // Mock axios for testing
 jest.mock("axios");
