@@ -99,3 +99,10 @@ Ensure you are in the frontend folder "speech/frontend" and run the following co
 ```bash
 npm test -- --watchAll --verbose
 ```
+
+## How to build an run docker container for the application
+
+Ensure you are in the root directory and run the following command:
+```bash
+docker-compose up --build
+```

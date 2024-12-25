@@ -13,7 +13,7 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
 # Copy the backend application code into the container
-COPY backend/ /app/
+COPY . /app/
 
 # Expose the FastAPI application on port 8000
 EXPOSE 8000
