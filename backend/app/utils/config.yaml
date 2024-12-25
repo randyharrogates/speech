@@ -1,0 +1,9 @@
+database:
+  name: "transcriptions.db"
+
+upload:
+  folder: "data/01_raw"
+
+model:
+  name: "tiny"
+

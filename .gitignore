@@ -1,43 +1,48 @@
 # Frontend: React
-node_modules/            # Dependency folder for npm or yarn
-build/                   # Build folder created by React (production build)
-*.log                    # Log files
-*.env                    # Environment variable files
-.DS_Store                # macOS specific file
-.vscode/                 # VSCode workspace settings
-.idea/                   # JetBrains IDE settings
-coverage/                # Jest test coverage
-*.bak                    # Backup files
+node_modules/            
+build/                   
+*.log                    
+*.env                    
+.DS_Store                
+.vscode/                 
+.idea/                   
+coverage/                
+*.bak                    
 
 # Backend: FastAPI / Python
-*.pyc                    # Compiled Python files
-*.pyo                    # Optimized Python files
-*.pyd                    # Python dynamic module
-__pycache__/             # Python cache folder
-.env                     # Environment variables
-*.env                    # .env files
-.venv/                   # Virtual environment folder
-env/                     # Virtual environment folder
-venv/                    # Virtual environment folder
+*.pyc                    
+*.pyo                    
+*.pyd                   
+__pycache__/             
+.env                     
+*.env                    
+.venv/                   
+env/                    
+venv/                   
 
 # Logs
-*.log                    # Log files
+*.log                    
 
 # Temporary files
-*.bak                    # Backup files
-*.swp                    # Swap files (e.g., vim)
+*.bak                    
+*.swp                    
 
 # Docker
-*.dockerignore           # Docker ignore file
-docker-compose.override.yml  # Optional Docker Compose override files
+*.dockerignore           
+docker-compose.override.yml  
 
 # IDE specific
-.vscode/                 # VSCode workspace settings
-.idea/                   # JetBrains IDE settings
+.vscode/                 
+.idea/                   
 
 # FastAPI migrations or database
-alembic.ini              # Alembic migrations
-migrations/              # SQLAlchemy migrations
+alembic.ini              
+migrations/              
 
 # Specifics
 .DS_Store
+
+backendvenv
+
+*.db
+data/
