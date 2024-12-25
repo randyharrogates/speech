@@ -27,12 +27,15 @@ def setup_and_cleanup_db():
     # Cleanup after all tests are run
     yield
 
-    # # Clean up the database after all tests are done
-    # conn = sqlite3.connect("backend/app/utils/test_transcriptions.db")
-    # c = conn.cursor()
-    # c.execute("DELETE FROM transcriptions")
-    # conn.commit()
-    # conn.close()
+    # Clean up the database after all tests are done
+    conn = sqlite3.connect("backend/app/utils/test_transcriptions.db")
+    c = conn.cursor()
+    c.execute("DELETE FROM transcriptions")
+    conn.commit()
+    conn.close()
+    # Delete the database file
+    if os.path.exists("backend/app/utils/test_transcriptions.db"):
+        os.remove("backend/app/utils/test_transcriptions.db")
 
 
 # Test the health endpoint
