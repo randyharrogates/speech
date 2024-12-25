@@ -129,6 +129,7 @@ function App() {
 						multiple
 						onChange={handleFileSelection}
 						ref={fileInputRef} // Reference the file input field
+						data-testid="file-input"
 					/>
 				</div>
 				<button
@@ -168,7 +169,7 @@ function App() {
 				<h2 className="h5">Search Transcriptions</h2>
 				<div className="input-group mb-3">
 					<input type="text" className="form-control form-control-sm" placeholder="Enter filename to search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-					<button className="btn btn-secondary btn-sm" onClick={handleSearch}>
+					<button className="btn btn-secondary btn-sm" onClick={handleSearch} data-testid="search-button">
 						<i className="bi bi-search"></i> Search
 					</button>
 				</div>
