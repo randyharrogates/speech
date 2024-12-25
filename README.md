@@ -20,6 +20,7 @@ pip install -r requirements.txt
 ```
 
 Ensure you are in the root project folder "speech" and run the following command
+
 ```bash
 pytest backend/tests/backend_test.py
 ```
