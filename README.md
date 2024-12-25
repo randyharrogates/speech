@@ -1,6 +1,6 @@
 # Speech Project
 
-This project consists of a full-stack application with a ReactJS frontend, a FastAPI backend, and SQLite as the database. It also uses OpenAI Whisper for transcription.
+This project consists of a full-stack application with a ReactJS frontend, a FastAPI backend, and SQLite as the database. It also uses OpenAI Whisper for transcription. Read architecture.pdf for a description of the design of the project.
 
 ## Requirements:
 
