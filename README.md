@@ -132,3 +132,7 @@ Ensure you are in the root directory and run the following command:
 ```bash
 docker-compose up --build
 ```
+
+## Application Architecture
+
+<img width="783" alt="image" src="https://github.com/user-attachments/assets/a2d1a5b5-fe74-444f-8dac-a506d34ced79" />
