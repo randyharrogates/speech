@@ -5,6 +5,11 @@ This project consists of a full-stack application with a ReactJS frontend, a Fas
 * Note
 Frontend for master branch is in a multi-page UI for better views. If needed, for single page UI, please use branch "v2_single_page"
 
+
+## Application Architecture
+
+<img width="783" alt="image" src="https://github.com/user-attachments/assets/a2d1a5b5-fe74-444f-8dac-a506d34ced79" />
+
 ## Requirements:
 
 - Python: 3.9 - 3.12 (Please use python version 3.12 for best compatibility
@@ -133,6 +138,4 @@ Ensure you are in the root directory and run the following command:
 docker-compose up --build
 ```
 
-## Application Architecture
 
-<img width="783" alt="image" src="https://github.com/user-attachments/assets/a2d1a5b5-fe74-444f-8dac-a506d34ced79" />
